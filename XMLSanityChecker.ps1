@@ -59,7 +59,7 @@ function show_selection_dialog {
 function show_validation_type_dialog {
     $form = New-Object Windows.Forms.Form
     $form.Text = "Validation Type Selection"
-    $form.Size = New-Object Drawing.Size(400,150)  # Made the form wider for readability
+    $form.Size = New-Object Drawing.Size(450, 150)  # Increased the width from 400 to 450
     $form.StartPosition = "CenterScreen"
     $form.TopMost = $true  # Ensure form is on top
 
@@ -79,20 +79,21 @@ function show_validation_type_dialog {
     $buttonNonASCII = New-Object Windows.Forms.Button
     $buttonNonASCII.Text = "Non-ASCII Check"
     $buttonNonASCII.Width = 120  # Increased width
-    $buttonNonASCII.Location = New-Object Drawing.Point(150, 70)
+    $buttonNonASCII.Location = New-Object Drawing.Point(160, 70)  # Adjusted position to fit wider form
     $buttonNonASCII.Add_Click({ $form.Tag = 'NonASCII'; $form.Close() })
     $form.Controls.Add($buttonNonASCII)
 
     $buttonBoth = New-Object Windows.Forms.Button
     $buttonBoth.Text = "Both"
     $buttonBoth.Width = 120  # Increased width
-    $buttonBoth.Location = New-Object Drawing.Point(270, 70)
+    $buttonBoth.Location = New-Object Drawing.Point(290, 70)  # Adjusted position to fit wider form
     $buttonBoth.Add_Click({ $form.Tag = 'Both'; $form.Close() })
     $form.Controls.Add($buttonBoth)
 
     $form.ShowDialog()
     return $form.Tag
 }
+
 
 # Function to validate XML against XSD schema
 function test_xml_file {
