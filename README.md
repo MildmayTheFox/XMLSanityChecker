@@ -102,7 +102,7 @@ Files containing non-printable characters:
 - **File Name Change**:
   - The script was renamed from `XmlSanityCheck.ps1` to `XMLSanityChecker.ps1` to reflect the correct capitalization of "XML" for readability and consistency (because "XML" looks odd if it's not fully capitalized or fully lowercase — just a personal aesthetic choice).
 
-- **SHA1SUM of `XMLSanityChecker.ps1`**: `65621071BD5920C5274B6649C2861527879181A7`
+- **SHA1SUM of `XMLSanityChecker.ps1`**: `A1632B745BE549CFE578DA52F03DFE67A11F077E`
 
 ### **Version 2.0**
 - **Enhancements**:
@@ -159,7 +159,7 @@ We are not allowing other characters, such as extended ASCII (values 127 and abo
 ## Version
 
 Current version: 3.0  
-SHA1SUM of `XMLSanityChecker.ps1`: `65621071BD5920C5274B6649C2861527879181A7`
+SHA1SUM of `XMLSanityChecker.ps1`: `A1632B745BE549CFE578DA52F03DFE67A11F077E`
 
 ## Author
 
