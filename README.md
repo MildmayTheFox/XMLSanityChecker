@@ -121,9 +121,16 @@ Files containing non-printable characters:
 
 ## Bug Fixes
 
+- **Version 3.1**:
+  - Fixed an issue where individual `xmlvalidationsummary.txt` and `asciivalidationsummary.txt` files were being generated alongside the combined `validation_and_ascii_summary.txt` when selecting the **Both** validation option. Now, only the combined summary is created.
+  - Ensured that summary files are always generated, even if all files pass validation (for both XSD and Non-ASCII checks).
+  - Fixed a bug where the summary for the Non-ASCII check was not generated when selecting a single file option.
+  - Made adjustments to ensure that summaries are created in the same directory as the file(s) being checked, for both folder and single file options.
+  
 - **Version 3.0**:
   - Fixed an issue where multiple summary files were being generated during the "Both" validation check. Now, only the `validation_and_ascii_summary.txt` file is generated for both checks.
   - Fixed a display issue where dialog boxes would open behind the PowerShell window. Dialog boxes now use the `TopMost` property to ensure they appear in the forefront.
+
 
 ## Testing Script Functionality
 
@@ -158,8 +165,8 @@ We are not allowing other characters, such as extended ASCII (values 127 and abo
 
 ## Version
 
-Current version: 3.0  
-SHA1SUM of `XMLSanityChecker.ps1`: `A1632B745BE549CFE578DA52F03DFE67A11F077E`
+Current version: 3.1  
+SHA1SUM of `XMLSanityChecker.ps1`: `2AD8731AFD0CA83E55564C76CA9ECED7102231B4`
 
 ## Author
 

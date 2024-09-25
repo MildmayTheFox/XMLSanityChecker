@@ -94,7 +94,6 @@ function show_validation_type_dialog {
     return $form.Tag
 }
 
-
 # Function to validate XML against XSD schema
 function test_xml_file {
     param (
@@ -226,8 +225,8 @@ if ($input_type -eq 'Folder') {
     $invalid_file_names = @()
     $files_with_issues_names = @()
 
-    # Perform XSD validation if selected
-    if ($check_type -eq 'XSD' -or $check_type -eq 'Both') {
+    # Perform XSD validation if selected and NOT Both
+    if (($check_type -eq 'XSD' -or $check_type -eq 'Both') -and $check_type -ne 'Both') {
         $schema_file_path = get_file_or_directory -is_directory $false -filter "XSD Files (*.xsd)|*.xsd|All Files (*.*)|*.*"
         foreach ($file in $xml_files) {
             $is_valid = test_xml_file -schema_file $schema_file_path -xml_file $file.FullName
@@ -242,10 +241,27 @@ if ($input_type -eq 'Folder') {
         if ($valid_files -eq $total_files) {
             Write-Host "All XML files passed XSD validation."
         }
+
+        # Generate XSD summary (xmlvalidationsummary.txt) only if XSD was selected (NOT Both)
+        if ($check_type -eq 'XSD') {
+            $summary_file = Join-Path -Path $directory_path -ChildPath "xmlvalidationsummary.txt"
+            $summary_content = @(
+                "Total Files Scanned: $total_files",
+                "Valid Files: $valid_files out of $total_files",
+                "Invalid Files: $invalid_files out of $total_files"
+            )
+            if ($invalid_files -gt 0) {
+                $summary_content += ""
+                $summary_content += "Files that failed validation:"
+                $summary_content += $invalid_file_names
+            }
+            $summary_content | Out-File -FilePath $summary_file -Encoding ASCII
+            Write-Host "Summary written to: $summary_file"
+        }
     }
 
-    # Perform Non-ASCII check if selected
-    if ($check_type -eq 'NonASCII' -or $check_type -eq 'Both') {
+    # Perform Non-ASCII check if selected and NOT Both
+    if (($check_type -eq 'NonASCII' -or $check_type -eq 'Both') -and $check_type -ne 'Both') {
         foreach ($file in $xml_files) {
             $has_no_issues = check_non_printable_characters -file_path $file.FullName
             if ($has_no_issues) { 
@@ -258,6 +274,24 @@ if ($input_type -eq 'Folder') {
 
         if ($files_without_issues -eq $total_files) {
             Write-Host "No non-ASCII characters found in any files."
+        }
+
+        # Generate non-ASCII summary (asciivalidationsummary.txt) only if Non-ASCII was selected (NOT Both)
+        if ($check_type -eq 'NonASCII') {
+            $summary_file = Join-Path -Path $directory_path -ChildPath "asciivalidationsummary.txt"
+            $summary_content = @(
+                "*** This check looked for characters outside the standard ASCII printable range (control characters and characters outside the printable ASCII range 0-31 and 127+). ***",
+                "Total Files Scanned: $total_files",
+                "Files Without Non-Printable Characters: $files_without_issues out of $total_files",
+                "Files With Non-Printable Characters: $files_with_issues out of $total_files"
+            )
+            if ($files_with_issues -gt 0) {
+                $summary_content += ""
+                $summary_content += "Files containing non-printable characters:"
+                $summary_content += $files_with_issues_names
+            }
+            $summary_content | Out-File -FilePath $summary_file -Encoding ASCII
+            Write-Host "Summary written to: $summary_file"
         }
     }
 
@@ -287,6 +321,20 @@ if ($input_type -eq 'Folder') {
         } else {
             Write-Host "File failed XSD validation."
         }
+
+        # Generate XSD summary for single file
+        if ($check_type -eq 'XSD') {
+            $summary_file = Join-Path -Path $file_directory -ChildPath "xmlvalidationsummary.txt"
+            $summary_content = @(
+                "Total Files Scanned: 1",
+                "File passed XSD validation."
+            )
+            if (-not $is_valid) {
+                $summary_content += "File failed XSD validation."
+            }
+            $summary_content | Out-File -FilePath $summary_file -Encoding ASCII
+            Write-Host "Summary written to: $summary_file"
+        }
     }
 
     # Perform Non-ASCII check for single file
@@ -296,6 +344,20 @@ if ($input_type -eq 'Folder') {
             Write-Host "File contains no non-ASCII characters."
         } else {
             Write-Host "Non-printable characters found in the file."
+        }
+
+        # Generate non-ASCII summary for single file
+        if ($check_type -eq 'NonASCII') {
+            $summary_file = Join-Path -Path $file_directory -ChildPath "asciivalidationsummary.txt"
+            $summary_content = @(
+                "*** This check looked for characters outside the standard ASCII printable range (control characters and characters outside the printable ASCII range 0-31 and 127+). ***",
+                "File contains no non-ASCII characters."
+            )
+            if (-not $has_no_issues) {
+                $summary_content += "Non-printable characters found."
+            }
+            $summary_content | Out-File -FilePath $summary_file -Encoding ASCII
+            Write-Host "Summary written to: $summary_file"
         }
     }
 
